@@ -70,6 +70,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="LAY-Gw-tBl"/>
@@ -86,6 +87,9 @@
                                 <include reference="JPQ-gr-b4g"/>
                             </mask>
                         </variation>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Bca-AB-w2l" appends="YES" id="VfV-TM-8hK"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" id="yHU-Ei-hgv"/>
                     <connections>
@@ -94,6 +98,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="Bca-AB-w2l">
+                    <connections>
+                        <action selector="onSwipeChangePriority:" destination="vXZ-lx-hvc" id="RJl-pp-67b"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1617" y="479"/>
         </scene>

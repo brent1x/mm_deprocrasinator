@@ -35,6 +35,7 @@
     return cell;
 }
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 //    cell.textLabel.textColor = [UIColor greenColor];
@@ -43,17 +44,51 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSLog(@"delete");
+        [self.todoListItems removeObjectAtIndex:indexPath.row];
+        [self.todoListItemsColors removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+
+}
+
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+}
+
+-(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
+    return YES;
+}
+
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath{
+}
+#pragma mark - Add Method
 
 - (IBAction)onAddButtonPressed:(UIButton *)sender {
     [self.todoListItems addObject:self.todoListTextField.text];
     [self.todoListItemsColors addObject:[UIColor blackColor]];
-
     NSLog(@"%@", self.todoListItems);
     [self.tableView reloadData];
     self.todoListTextField.text = nil;
     [self.view endEditing:YES];
 }
 
+#pragma mark - Edit Method
+
 - (IBAction)onEditButtonPressed:(UIButton *)sender {
+    if ([[sender currentTitle] isEqualToString:@"Done"]) {
+        [sender setTitle:@"Edit" forState:UIControlStateNormal];
+        [self.tableView setEditing:NO animated:YES];
+    } else {
+        [sender setTitle:@"Done" forState:UIControlStateNormal];
+        [self.tableView setEditing:YES animated:YES];
+    }
 }
+- (IBAction)onSwipeChangePriority:(UISwipeGestureRecognizer *)sender {
+    //NSLog(@"swipes");
+    [self.tableView 
+}
+
 @end
