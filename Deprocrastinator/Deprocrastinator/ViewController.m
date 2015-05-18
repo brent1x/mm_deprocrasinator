@@ -45,11 +45,29 @@
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSLog(@"delete");
-        [self.todoListItems removeObjectAtIndex:indexPath.row];
-        [self.todoListItemsColors removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Delete?" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction *yesButton = [UIAlertAction actionWithTitle:@"YES" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"delete");
+            [self.todoListItems removeObjectAtIndex:indexPath.row];
+            [self.todoListItemsColors removeObjectAtIndex:indexPath.row];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }];
+
+        UIAlertAction *noButton = [UIAlertAction actionWithTitle:@"NO" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self.tableView setEditing:NO animated:YES];
+        }];
+
+        [alertController addAction:yesButton];
+        [alertController addAction:noButton];
+
+        [self presentViewController:alertController animated:YES completion:nil];
+
+
     }
 
 }
@@ -58,11 +76,18 @@
     return YES;
 }
 
--(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
-    return YES;
-}
+//-(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return YES;
+//}
 
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath{
+    NSString *stringToMove = self.todoListItems[sourceIndexPath.row];
+    UIColor *colorToMove = self.todoListItemsColors[sourceIndexPath.row];
+    [self.todoListItems removeObjectAtIndex:sourceIndexPath.row];
+    [self.todoListItems insertObject:stringToMove atIndex:destinationIndexPath.row];
+    [self.todoListItemsColors removeObjectAtIndex:sourceIndexPath.row];
+    [self.todoListItemsColors insertObject:colorToMove atIndex:destinationIndexPath.row];
+
 }
 #pragma mark - Add Method
 
@@ -88,7 +113,25 @@
 }
 - (IBAction)onSwipeChangePriority:(UISwipeGestureRecognizer *)sender {
     //NSLog(@"swipes");
-    [self.tableView 
+//    if (sender.state == UISwipeGestureRecognizerDirectionRight) {
+//        NSLog(@"swipes");
+//    }
+    CGPoint swipelocation = [sender locationInView:self.tableView];
+    NSIndexPath *swipeIndexPath = [self.tableView indexPathForRowAtPoint:swipelocation];
+    //UITableViewCell *swipedCell = [self.tableView cellForRowAtIndexPath:swipeIndexPath];
+    if ([self.todoListItemsColors objectAtIndex:swipeIndexPath.row] == [UIColor blackColor]) {
+        [self.todoListItemsColors replaceObjectAtIndex:swipeIndexPath.row withObject:[UIColor redColor]];
+    } else if ([self.todoListItemsColors objectAtIndex:swipeIndexPath.row] == [UIColor redColor]){
+        [self.todoListItemsColors replaceObjectAtIndex:swipeIndexPath.row withObject:[UIColor yellowColor]];
+    }else if ([self.todoListItemsColors objectAtIndex:swipeIndexPath.row] == [UIColor yellowColor]){
+        [self.todoListItemsColors replaceObjectAtIndex:swipeIndexPath.row withObject:[UIColor greenColor]];
+    }else if ([self.todoListItemsColors objectAtIndex:swipeIndexPath.row] == [UIColor greenColor]){
+        [self.todoListItemsColors replaceObjectAtIndex:swipeIndexPath.row withObject:[UIColor blackColor]];
+    }
+    //[self.todoListItemsColors replaceObjectAtIndex:swipeIndexPath.row withObject:[UIColor redColor]];
+    [self.tableView reloadData];
+    //NSLog(@"%@", [self.todoListItems objectAtIndex:swipeIndexPath.row]);
+
 }
 
 @end
